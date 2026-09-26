@@ -1,4 +1,9 @@
 package diagnostic.motoengine.kpz.data.remote.dto
 
-class SymptomDto {
-}
+
+data class SymptomDto(
+    val id: String?,
+    val code: String,
+    val label: String,
+    val group: String
+)
