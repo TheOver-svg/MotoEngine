@@ -1,6 +1,14 @@
 package diagnostic.motoengine.kpz.ui.navigation
 
-sealed class Screen(val route: String) {
-    object Symptoms : Screen("symptoms")
-    object Results : Screen("results")
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.ui.graphics.vector.ImageVector
+
+sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
+    object Symptoms : Screen("symptoms", "Діагностика", Icons.Filled.Build)
+    object Results : Screen("results", "Результат", Icons.Filled.Build)
+    object Editor : Screen("editor", "Редактор", Icons.Filled.Edit)
 }
+
+val bottomBarScreens = listOf(Screen.Symptoms, Screen.Editor)
