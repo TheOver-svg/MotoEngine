@@ -31,6 +31,11 @@ class SymptomsViewModel @Inject constructor(
         loadSymptoms()
     }
 
+    fun refresh()
+    {
+        loadSymptoms()
+    }
+
     private fun loadSymptoms() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
