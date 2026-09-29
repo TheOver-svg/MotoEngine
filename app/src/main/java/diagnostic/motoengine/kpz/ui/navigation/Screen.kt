@@ -1,4 +1,6 @@
 package diagnostic.motoengine.kpz.ui.navigation
 
-class Screen {
+sealed class Screen(val route: String) {
+    object Symptoms : Screen("symptoms")
+    object Results : Screen("results")
 }

@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import diagnostic.motoengine.kpz.data.repository.DiagnosticsRepository
 import diagnostic.motoengine.kpz.data.repository.DiagnosticsRepositoryImpl
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
