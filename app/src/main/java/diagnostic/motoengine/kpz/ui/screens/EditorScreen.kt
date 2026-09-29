@@ -62,7 +62,7 @@ private fun SymptomEditorTab(symptoms: List<Symptom>, onAdd: (String, String, St
                     Text("Нова ознака", fontWeight = FontWeight.SemiBold)
                     OutlinedTextField(
                         value = code, onValueChange = { code = it },
-                        label = { Text("Код (напр. s_new_symptom)") },
+                        label = { Text("Код") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -72,7 +72,7 @@ private fun SymptomEditorTab(symptoms: List<Symptom>, onAdd: (String, String, St
                     )
                     OutlinedTextField(
                         value = group, onValueChange = { group = it },
-                        label = { Text("Група (напр. Пуск двигуна)") },
+                        label = { Text("Група") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Button(
@@ -96,9 +96,16 @@ private fun SymptomEditorTab(symptoms: List<Symptom>, onAdd: (String, String, St
 
         items(symptoms) { s ->
             Surface(shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(s.label, style = MaterialTheme.typography.bodyMedium)
-                    Text("${s.code} · ${s.group}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Card(Modifier.fillMaxWidth())
+                {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(s.label, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            "${s.code} · ${s.group}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
