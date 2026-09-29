@@ -11,3 +11,10 @@ data class FiredRule(
     val conclusionCode: String,
     val conclusionText: String
 )
+
+data class Rule(
+    val ruleCode: String,
+    val conditions: List<String>,
+    val conclusionCode: String,
+    val conclusionText: String
+)
