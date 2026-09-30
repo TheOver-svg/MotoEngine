@@ -14,6 +14,7 @@ import javax.inject.Inject
 data class SymptomsUiState(
     val symptoms: List<Symptom> = emptyList(),
     val selectedCodes: Set<String> = emptySet(),
+    val hiddenCodes: Set<String> = emptySet(),
     val results: List<FiredRule> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
@@ -27,6 +28,12 @@ class SymptomsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SymptomsUiState())
     val uiState: StateFlow<SymptomsUiState> = _uiState
 
+    private val conflicts: Map<String, Set<String>> = buildConflicts(
+        "s_spark_yes" to "s_spark_no",
+        "s_starter_no" to "s_starter_yes",
+        "s_smoke_black" to "s_smoke_white"
+    )
+
     init {
         loadSymptoms()
     }
@@ -34,6 +41,14 @@ class SymptomsViewModel @Inject constructor(
     fun refresh()
     {
         loadSymptoms()
+    }
+    private fun buildConflicts(vararg pairs: Pair<String, String>): Map<String, Set<String>> {
+        val map = mutableMapOf<String, MutableSet<String>>()
+        pairs.forEach { (a, b) ->
+            map.getOrPut(a) { mutableSetOf() }.add(b)
+            map.getOrPut(b) { mutableSetOf() }.add(a)
+        }
+        return map
     }
 
     private fun loadSymptoms() {
@@ -50,8 +65,13 @@ class SymptomsViewModel @Inject constructor(
 
     fun toggleSymptom(code: String) {
         val current = _uiState.value.selectedCodes
-        val updated = if (code in current) current - code else current + code
-        _uiState.value = _uiState.value.copy(selectedCodes = updated)
+        val updated = if (code in current) {
+            current - code
+        } else {
+            current + code - (conflicts[code] ?: emptySet())
+        }
+        val hidden = updated.flatMap { conflicts[it] ?: emptySet() }.toSet()
+        _uiState.value = _uiState.value.copy(selectedCodes = updated, hiddenCodes = hidden)
     }
 
     fun runDiagnosis() {

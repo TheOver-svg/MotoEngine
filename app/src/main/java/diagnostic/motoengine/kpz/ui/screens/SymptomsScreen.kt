@@ -108,14 +108,15 @@ fun SymptomsScreen(
                 }
 
                 else -> {
-                    val grouped = state.symptoms.groupBy { it.group }
+                    val visible = state.symptoms.filter { it.code !in state.hiddenCodes }
+                    val grouped = visible.groupBy { it.group }
 
                     LazyColumn(
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         grouped.forEach { (group, symptoms) ->
-                            item {
+                            item(key = "header_$group") {
                                 Text(
                                     group,
                                     style = MaterialTheme.typography.labelLarge,
@@ -123,11 +124,12 @@ fun SymptomsScreen(
                                     modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
                                 )
                             }
-                            items(symptoms) { symptom ->
+                            items(symptoms, key = { it.code }) { symptom ->
                                 SymptomRow(
                                     symptom = symptom,
                                     checked = symptom.code in state.selectedCodes,
-                                    onToggle = { viewModel.toggleSymptom(symptom.code) }
+                                    onToggle = { viewModel.toggleSymptom(symptom.code) },
+                                    modifier = Modifier.animateItem()
                                 )
                             }
                         }
@@ -142,7 +144,8 @@ fun SymptomsScreen(
 private fun SymptomRow(
     symptom: Symptom,
     checked: Boolean,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
