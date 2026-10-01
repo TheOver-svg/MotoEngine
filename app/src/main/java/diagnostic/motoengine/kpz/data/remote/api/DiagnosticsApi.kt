@@ -19,4 +19,7 @@ interface DiagnosticsApi {
 
     @POST("api/diagnosis")
     suspend fun diagnose(@Body request: DiagnosisRequestDto): DiagnosisResultDto
+
+    @POST("api/consultation/next")
+    suspend fun consult(@Body request: ConsultationRequestDto): ConsultationResponseDto
 }
