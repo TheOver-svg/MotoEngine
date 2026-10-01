@@ -2,10 +2,15 @@ package diagnostic.motoengine.kpz.data.repository
 
 
 import diagnostic.motoengine.kpz.data.remote.api.DiagnosticsApi
+import diagnostic.motoengine.kpz.data.remote.dto.AnswerDto
+import diagnostic.motoengine.kpz.data.remote.dto.ConsultationRequestDto
 import diagnostic.motoengine.kpz.data.remote.dto.DiagnosisRequestDto
 import diagnostic.motoengine.kpz.data.remote.dto.RuleDto
 import diagnostic.motoengine.kpz.data.remote.dto.SymptomDto
+import diagnostic.motoengine.kpz.domain.model.Answer
+import diagnostic.motoengine.kpz.domain.model.ConsultationStep
 import diagnostic.motoengine.kpz.domain.model.FiredRule
+import diagnostic.motoengine.kpz.domain.model.Hypothesis
 import diagnostic.motoengine.kpz.domain.model.Rule
 import diagnostic.motoengine.kpz.domain.model.Symptom
 import javax.inject.Inject
@@ -52,4 +57,29 @@ class DiagnosticsRepositoryImpl @Inject constructor(
         api.diagnose(DiagnosisRequestDto(selectedCodes)).firedRules.map {
             FiredRule(it.ruleCode, it.conclusionCode, it.conclusionText)
         }
+
+    override suspend fun consult(group: String?, answers: List<Answer>): ConsultationStep {
+        val r = api.consult(ConsultationRequestDto(group, answers.map {
+            AnswerDto(
+                it.code,
+                it.value
+            )
+        }))
+        return ConsultationStep(
+            finished = r.finished,
+            question = r.question?.let { Symptom(it.code, it.label, it.group) },
+            hypotheses = r.hypotheses.orEmpty().map {
+                Hypothesis(
+                    it.ruleCode,
+                    it.text,
+                    it.matched,
+                    it.total
+                )
+            },
+            firedRules = r.firedRules.orEmpty().map {
+                FiredRule(it.ruleCode, it.conclusionCode, it.conclusionText, it.because.orEmpty())
+            },
+            questionNumber = r.questionNumber
+        )
+    }
 }
