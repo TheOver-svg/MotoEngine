@@ -9,7 +9,8 @@ data class Symptom(
 data class FiredRule(
     val ruleCode: String,
     val conclusionCode: String,
-    val conclusionText: String
+    val conclusionText: String,
+    val because: List<String> = emptyList()
 )
 
 data class Rule(
