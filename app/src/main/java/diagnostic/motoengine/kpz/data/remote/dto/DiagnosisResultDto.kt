@@ -7,7 +7,8 @@ data class DiagnosisRequestDto(
 data class FiredRuleDto(
     val ruleCode: String,
     val conclusionCode: String,
-    val conclusionText: String
+    val conclusionText: String,
+    val because: List<String>? = null
 )
 
 data class DiagnosisResultDto(
