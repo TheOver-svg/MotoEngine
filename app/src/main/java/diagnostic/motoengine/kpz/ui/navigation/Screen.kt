@@ -9,3 +9,5 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object Symptoms : Screen("symptoms", "Діагностика", Icons.Filled.Build)
     object Editor : Screen("editor", "Редактор", Icons.Filled.Edit)
 }
+
+val bottomBarScreens = listOf(Screen.Symptoms, Screen.Editor)
